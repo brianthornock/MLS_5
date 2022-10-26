@@ -1,0 +1,21 @@
+.env
+
+# Logs
+logs
+*.log
+
+# Random crap
+trash
+.DS_Store
+.sass-cache
+.tmp
+.rvmrc
+.trashes
+*~
+
+# Editor
+.vscode
+.vscode-test
+*.sublime-project
+*.sublime-workspace
+sftp-config.json
