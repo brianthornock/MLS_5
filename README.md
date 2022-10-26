@@ -1,4 +1,4 @@
-# MLS_5
+# MLS-5
 
 A 5-loop, MIDI-Controllable Switcher
 
@@ -8,6 +8,8 @@ Features include:
  - Indicator LED's for enabled loops
 
 The code, layouts, build instructions, and other documentation are provided to the DIY community for personal, non-professional use by Brian Thornock, copyright 2019
+
+There's also an additional [article](https://scientificguitarist.wixsite.com/home/mls-5) and a [demonstartion video](https://www.youtube.com/watch?v=fT1JugYtmUw).
 
 ![Fig. X: Box Jack](/docs/assets/images/MLS_5.jpg)
 
