@@ -12,5 +12,6 @@ The updated version has the following features:
  - Faster response by using interrupts for local loop control
  - Momentary press/hold loop activation
  - Exclusivity switches that allow flip/flop-style toggling of loops that have the switches set
+ - MIDI Through
 
 The code, layouts, build instructions, and other documentation are provided to the DIY community for personal, non-professional use.
