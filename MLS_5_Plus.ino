@@ -1,24 +1,24 @@
 
 // Define relay control pin assignments
-const uint8_t relay1 = 11;
-const uint8_t relay2 = 9;
-const uint8_t relay3 = 7;
-const uint8_t relay4 = 5;
-const uint8_t relay5 = 3;
+const uint8_t relay1 = 15; //A1
+const uint8_t relay2 = 14; //A0
+const uint8_t relay3 = 16; //A2
+const uint8_t relay4 = 17; //A3
+const uint8_t relay5 = 18; //A4
 
 // Define footswitch input pin assignments
-const uint8_t fsw1 = 16; //A2;
-const uint8_t fsw2 = 15; //A1;
-const uint8_t fsw3 = 14; //A0;
-const uint8_t fsw4 = 17; //A3;
-const uint8_t fsw5 = 18; //A4;
+const uint8_t fsw1 = 8;
+const uint8_t fsw2 = 10;
+const uint8_t fsw3 = 7;
+const uint8_t fsw4 = 2;
+const uint8_t fsw5 = 3;
 
 // Define exclusivity switch pin assignments
-const uint8_t xsw1 = 10;
-const uint8_t xsw2 = 8;
+const uint8_t xsw1 = 9;
+const uint8_t xsw2 = 11;
 const uint8_t xsw3 = 6;
-const uint8_t xsw4 = 4;
-const uint8_t xsw5 = 2;
+const uint8_t xsw4 = 5;
+const uint8_t xsw5 = 4;
 
 const uint8_t debugLED = 19;
 
@@ -98,27 +98,25 @@ void setup() {
 
   checkXSw();
 
-  // Enable pin change interrupts on Port C for the footswitch input pins (PC0-4)
+  // Enable pin change interrupts on Ports B and D for the footswitch input pins
   cli();
-  PCICR = 1<<PCIE1; //Enable Port C for PCI
-  PCMSK1 = 0b00011111; //Enable interrupts only on these pins
+  PCICR  |= 0b00000101; //Enable Ports B and D for PCI
+  PCMSK0 |= 0b00000101; //Enable interrupts only on these port B pins
+  PCMSK2 |= 0b10001100; //Enable interrupts only on these port D pins
   sei(); //Start the interrupt service routine
 
   //Start up the serial port to begin receiving MIDI
   Serial.begin(31250);
 }
 
-//PCI routine for when a footswitch is pressed or released
-ISR(PCINT1_vect){
+//PCI routine for when a footswitch is pressed or released on Port B
+ISR(PCINT0_vect){
 
   // Only deal with the interrupt if we aren't currently dealing with one
   if (sw_flag==0){
 
     int read1 = digitalRead(fsw1);
     int read2 = digitalRead(fsw2);
-    int read3 = digitalRead(fsw3);
-    int read4 = digitalRead(fsw4);
-    int read5 = digitalRead(fsw5);
   
     //If the switch reading is not the same as the previous state
     if(read1 != lastButton1State){
@@ -132,13 +130,28 @@ ISR(PCINT1_vect){
       tempDebounceState = read2;
       lastDebounceTime = millis();
     }
+  }
+}
 
+
+
+//PCI routine for when a footswitch is pressed or released on Port D
+ISR(PCINT2_vect){
+
+  // Only deal with the interrupt if we aren't currently dealing with one
+  if (sw_flag==0){
+
+    int read3 = digitalRead(fsw3);
+    int read4 = digitalRead(fsw4);
+    int read5 = digitalRead(fsw5);
+  
+    //If the switch reading is not the same as the previous state
     if(read3 != lastButton3State){
       sw_flag = 3;
       tempDebounceState = read3;
       lastDebounceTime = millis();
     }
-
+  
     if(read4 != lastButton4State){
       sw_flag = 4;
       tempDebounceState = read4;
@@ -244,7 +257,7 @@ void checkSwitch(){
 
       case 3:
       if ((millis()-lastDebounceTime) > debounceDelay){
-        if (digitalRead(fsw2)==tempDebounceState){
+        if (digitalRead(fsw3)==tempDebounceState){
           //The switch has been confirmed as debounced
           button3State = tempDebounceState;
         
